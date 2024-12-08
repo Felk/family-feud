@@ -1,15 +1,17 @@
 <script lang="ts">
     import type {Payload} from "./remotestore";
-    import {Answer, answers, isGamemaster, title} from "./stores";
+    import {type Answer, answers, connectionStatus, ConnectionStatus, isGamemaster, title} from "./stores";
     import AnswerComponent from "./AnswerComponent.svelte";
 
     const connect = () => {
         console.debug("connecting to websocket...")
+        $connectionStatus = ConnectionStatus.Connecting;
         const ws = new WebSocket('ws://localhost:8030');
         const listener = (evt: CustomEvent<Payload>) => {
             ws.send(JSON.stringify(evt.detail));
         };
         ws.onopen = function () {
+            $connectionStatus = ConnectionStatus.Connected;
             console.debug("websocket connection established")
             document.addEventListener("remotestore_send", listener);
         };
@@ -19,6 +21,7 @@
         };
 
         ws.onclose = function (e) {
+            $connectionStatus = ConnectionStatus.Disconnected;
             document.removeEventListener("remotestore_send", listener);
             console.log('Socket is closed. Reconnect will be attempted in 1 second.', e.reason);
             setTimeout(function () {
@@ -27,6 +30,7 @@
         };
 
         ws.onerror = function (e) {
+            $connectionStatus = ConnectionStatus.Disconnected;
             console.error('Socket encountered error: ', e, 'Closing socket');
             ws.close();
         };
@@ -83,6 +87,14 @@
       on:dragover={e => e.preventDefault()}>
     <input id="gamemaster-checkbox" type="checkbox" bind:checked={$isGamemaster}/>
     <label for="gamemaster-checkbox">Gamemaster mode</label>
+
+    {#if $connectionStatus === ConnectionStatus.Connected}
+        <div>✅ Connected to server</div>
+    {:else if $connectionStatus === ConnectionStatus.Connecting}
+        <div>⚠️ Connecting to server...</div>
+    {:else if $connectionStatus === ConnectionStatus.Disconnected}
+        <div>⚠️ Not connected to server</div>
+    {/if}
 
     <h1>{$title}</h1>
     <div>

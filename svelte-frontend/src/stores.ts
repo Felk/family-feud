@@ -13,3 +13,6 @@ export const title: Writable<string> = createRemoteStore("title");
 export const answers: Writable<Answer[]> = createRemoteStore("answers", []);
 
 export const isGamemaster: Writable<boolean> = writable(false);
+
+export enum ConnectionStatus {Disconnected, Connecting, Connected}
+export const connectionStatus: Writable<ConnectionStatus> = writable(ConnectionStatus.Disconnected);
