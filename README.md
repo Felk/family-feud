@@ -12,7 +12,7 @@ The board's state is synchronized between all tabs by going through the server.
 ### Making a release build
 
 You need to first build the frontend using `npm run build` from the `svelte-frontend` directory,
-because the `rust-backend` expects the frontend to lie under `../svelte-frontend/public/`.
+because the `rust-backend` expects the frontend to lie under `../svelte-frontend/dist/`.
 There is no automatism for that right now.
 After that, you can run `cargo build --release` from the `rust-backend` directory,
 and your release build will be at e.g. `target/release/family-feud.exe`.

@@ -2,11 +2,11 @@ use std::collections::HashMap;
 use std::ops::DerefMut;
 
 use async_std;
-use async_std::{net, task};
 use async_std::channel::Sender;
 use async_std::net::TcpStream;
 use async_std::path::Path;
 use async_std::task::JoinHandle;
+use async_std::{net, task};
 use async_tungstenite;
 use async_tungstenite::tungstenite::Message;
 use async_tungstenite::WebSocketStream;
@@ -17,15 +17,15 @@ use rust_embed::RustEmbed;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use serde_json::{Error, Value};
-use tide::{Body, StatusCode};
 use tide::http::Mime;
+use tide::{Body, StatusCode};
 
 use crate::state::{Answer, State};
 
 mod state;
 
 #[derive(RustEmbed)]
-#[folder = "../svelte-frontend/public/"]
+#[folder = "../svelte-frontend/dist/"]
 struct Asset;
 
 #[derive(Debug, Deserialize, Serialize)]
